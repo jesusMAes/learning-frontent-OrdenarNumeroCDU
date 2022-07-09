@@ -1,5 +1,7 @@
-import jQuery from "jquery";
 
-$ (document).ready(function({
-  alert("javascript works");
-}));
+
+function ordenaCDU(){
+  let captura =document.getElementById("input");
+  let entrada = captura.innerHTML;
+  console.log(captura)
+}
