@@ -1,3 +1,21 @@
 Voy a empezar tomando notas la interfaz debería ser ser sencilla, un fondo de coloritis un input un h2 que diga mete los numeros separados por comas o espacios y un botón 
 
-lo jodido es procesar los numeros pero se puede hacer todo en un javascrip, cada operador tiene un orden de precedencia, primero van los numeros normales luego los que llevan operador y luego el siguiente numero normal luego los que llevan operador y así, entonces la idea viene siendo detectar el numero normal más bajo, y el numero normal sin operador siguiente a ese luego coger todos los numeros con operadores entre ellos y  separarlos en array dentro de cada tipo de operador, esos arrays se ordenan por su cuenta en base a orden numerico y si tienen operadores dentro en base al orden del operador, luego se meten esos detrás del numero normal primero en el orden adecuado segun la preferencia y se pasa al siguiente numero normal y así hasta llegar al final del array, supongo que todo esto se haria enlazando bucles uno dentro de otro y puede ser jodido pero la idea es ir apartándolos en bloques  y ordenar lo del medio 
+lo jodido es procesar los numeros pero se puede hacer todo en un javascrip, cada operador tiene un orden de precedencia, primero van los numeros normales luego los que llevan operador y luego el siguiente numero normal luego los que llevan operador y así, entonces la idea viene siendo:
+
+1. detectar el numero normal más bajo, y el numero normal sin operador siguiente a ese.
+
+2.  coger todos los numeros con operadores entre ellos y  separarlos en array dentro de cada tipo de operador.
+
+3. esos arrays se ordenan por su cuenta en base a orden numerico y si tienen operadores dentro en base al orden del operador para esto puedo crear una función aparte que lo ordene y llamarla pasandole el array así no ensucia el código.
+
+
+4 luego se meten esos detrás del numero normal primero en el orden adecuado segun la preferencia y se pasa al siguiente numero normal.
+
+5. Para detectar que sean mayores que el primer numero y menos que el segundo en el for se le puede separar el numero del operador y comparar ese. y así hasta llegar al final del array.
+
+6. Un problema viene cuando tienen más de un operador pero eso es una excepción que habrá que resolver después.
+
+
+7. supongo que todo esto se haria enlazando bucles uno dentro de otro y puede ser jodido pero la idea es ir apartándolos en bloques  y ordenar lo del medio
+
+8. Buena suerte yo del futuro.
