@@ -209,17 +209,35 @@ for(let i=0; i<copiaParentesisCero.length; i++){
       despues = despues.charAt(0) + '.'+ despues.substring(1);
       let despuesSiguiente =stringTemporalSiguiente.slice(indiceSegundo+1, indiceCierreSegundo);
       despuesSiguiente = despuesSiguiente.charAt(0) + '.'+ despuesSiguiente.substring(1);
-      
+      //codigo de mierda, no vales para nada, el python es mejor, pringao, necesitas mil lineas para una chorrada
       if(despues > despuesSiguiente){
         almacenTemporal = copiaParentesisCero[j];
         copiaParentesisCero[j] = copiaParentesisCero[j+1];
         copiaParentesisCero[j+1] = almacenTemporal;
       }
     }
+  }
+}
+//FIN ORDENAR PARENTESISCERO ARRAY---------------------------------
 
+//INICIO ORDENAR PARENTESIS NUMERO ARRAY--------------
+
+let copiaParentesisNumero = parentesisNumeroArray;
+
+for(let i=0; i<copiaParentesisNumero.length;i++){
+  for(let j=0; j< copiaParentesisNumero.length-1; j++){
+    let stringTemporal="";
+    stringTemporal =copiaParentesisNumero[j];
+    let indicePrimero = stringTemporal.indexOf('(');
+    let indiceCierrePrimero =stringTemporal.indexOf(')');
+
+    let stringTemporalSiguiente = "";
+    stringTemporalSiguiente= copiaParentesisNumero[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('(');
+    let indiceCierreSegundo = stringTemporalSiguiente.indexOf(')');
+    //QUEDAMOS AQUÍ
   }
 }
 
-console.log(copiaParentesisCero)
 
 }//FIN DE LA FUNCION
