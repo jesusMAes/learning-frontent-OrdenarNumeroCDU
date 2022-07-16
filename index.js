@@ -235,9 +235,196 @@ for(let i=0; i<copiaParentesisNumero.length;i++){
     stringTemporalSiguiente= copiaParentesisNumero[j+1];
     let indiceSegundo = stringTemporalSiguiente.indexOf('(');
     let indiceCierreSegundo = stringTemporalSiguiente.indexOf(')');
-    //QUEDAMOS AQUÍ
+   
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice (0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaParentesisNumero[j];
+      copiaParentesisNumero[j] =copiaParentesisNumero[j+1];
+      copiaParentesisNumero[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero, indiceCierrePrimero);
+      despues = despues.charAt(0)+ '.'+ despues.substring(1);
+
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo, indiceCierreSegundo);
+      despuesSiguiente= despuesSiguiente.charAt(0)+'.'+despuesSiguiente.substring(1);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaParentesisNumero[j];
+        copiaParentesisNumero[j] = copiaParentesisNumero[j+1];
+        copiaParentesisNumero[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR PARENTESIS NUMERO------------------------
+
+//INICIO ORDENAR PARENTESIS IGUAL----------------------
+
+let copiaParentesisIgual = parentesisIgualArray;
+
+for(let i=0; i < copiaParentesisIgual.length;i++){
+  for(let j=0; j< copiaParentesisIgual.length-1;j++){
+
+    let stringTemporal='';
+    stringTemporal = copiaParentesisIgual[j];
+
+    let indicePrimero = stringTemporal.indexOf('(');
+    let igualPrimero = stringTemporal.indexOf('=');
+    let indiceCierrePrimero = stringTemporal.indexOf(')');
+
+    let stringTemporalSiguiente = copiaParentesisIgual[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('(');
+    let igualSegundo =stringTemporalSiguiente.indexOf('=');
+    let indiceCierreSegundo = stringTemporalSiguiente.indexOf(')');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes= stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaParentesisIgual[j];
+      copiaParentesisIgual[j] = copiaParentesisIgual[j+1];
+      copiaParentesisIgual[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(igualPrimero, indiceCierrePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(igualSegundo, indiceCierreSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaParentesisIgual[j];
+        copiaParentesisIgual[j] = copiaParentesisIgual[j+1];
+        copiaParentesisIgual[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR PARENTESIS IGUAL------------------------
+
+//INICIO ORDENAR COMILLAS TIEMPO---------------------------
+
+let copiaComillas = comillasTiempoArray;
+//el tiempo tiene características unicas, hay que ver el numero de digitos, si son cuatro es el año, tres habla de decenio, 2 de siglo y uno con milenio esto lo podemos solucionar añadiendo ceros hasta llegar a cuatro cifras, además lleva la barra para indicar extensión, para tratar eso habrá que comparar el numero principal como en todos pero dentro de las comillas habrá que separar comparar si el primero es igual y luego ordenar en base al 2º más alto
+
+for(let i=0; i<copiaComillas.length; i++){
+  for(let j=0; j<copiaComillas.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaComillas[j];
+
+    let indicePrimero = stringTemporal.indexOf('"');
+    let indiceSeparador = stringTemporal.indexOf('/');
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente = copiaComillas[j+1];
+
+    let indiceSegundo = stringTemporalSiguiente.indexOf('"');
+    let indiceSeparadorSiguiente = stringTemporalSiguiente.indexOf('/');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+
+      almacenTemporal = copiaComillas[j];
+      copiaComillas[j] = copiaComillas[j+1];
+      copiaComillas[j+1]= almacenTemporal;
+      
+    }else if(antes == antesSiguiente){
+      let primeraFechaAntes;
+      let segundaFechaAntes = '';
+      //comprobar si la fecha es compuesta
+      if(indiceSeparador != -1){
+       primeraFechaAntes = stringTemporal.slice(indicePrimero+1, indiceSeparador-1);
+      if(primeraFechaAntes.length==1){
+        primeraFechaAntes += 000;
+      }else if(primeraFechaAntes.length==2){
+        primeraFechaAntes += 00;
+      }else if(primeraFechaAntes.length==3){
+        primeraFechaAntes +=0;
+      }else{
+        primeraFechaAntes = stringTemporal.slice(indicePrimero+1, indiceSeparador-1);
+      }
+
+
+      
+       segundaFechaAntes =stringTemporal.slice(indiceSeparador+1, -1);
+
+
+      if(segundaFechaAntes.length==1){
+        segundaFechaAntes+=000;
+      }else if(segundaFechaAntes.length == 2){
+        segundaFechaAntes +=00;
+      }else if(segundaFechaAntes.length == 3){
+        segundaFechaAntes +=0;
+      }
+      }else{
+        primeraFechaAntes = stringTemporal.slice(indicePrimero+1, -1)
+      }
+
+     let  primeraFechaAntesNumero = parseInt(primeraFechaAntes);
+     let segundaFechaAntesNumero = parseInt(segundaFechaAntes);
+  
+      //comprobar si la siguiente fecha es compuesta
+      let primeraFechaSiguiente;
+      let segundaFechaSiguiente = '';
+      if(indiceSeparadorSiguiente !=-1){
+         primeraFechaSiguiente = stringTemporalSiguiente.slice(indicePrimero, indiceSeparadorSiguiente-1);
+
+        if(primeraFechaSiguiente.length==1){
+          primeraFechaSiguiente +=000;
+        }else if(primeraFechaSiguiente.length==2){
+          primeraFechaSiguiente += 00;
+        }else if(primeraFechaSiguiente.length ==3){
+          primeraFechaSiguiente += 0;
+        }
+
+        
+        
+        segundaFechaSiguiente= stringTemporalSiguiente.slice(indiceSeparadorSiguiente+1, -1);
+        if(segundaFechaSiguiente.length==1){
+          segundaFechaSiguiente +=000;
+        }else if(segundaFechaSiguiente.length == 2){
+          segundaFechaSiguiente +=00;
+        }else if(segundaFechaSiguiente.length == 3){
+          segundaFechaSiguiente +=0;
+        }else{
+          segundaFechaSiguiente = stringTemporalSiguiente.slice(indiceSeparadorSiguiente+1, -1);
+        }
+        
+      }else{
+        primeraFechaSiguiente = stringTemporalSiguiente.slice(indicePrimero+1, -1);
+      }
+      let primeraFechaSiguienteNumero = parseInt(primeraFechaSiguiente);
+      let segundaFechaSiguienteNumero = parseInt(segundaFechaSiguiente);
+      
+    //QUEDO TRABAJANDO EN ARREGLAR PRIMERA FECHA SIGUIENTE NUMERO
+      console.log(primeraFechaSiguienteNumero);
+    if(primeraFechaAntesNumero > primeraFechaSiguienteNumero){
+      almacenTemporal = copiaComillas[j];
+      copiaComillas[j] = copiaComillas[j+1];
+      copiaComillas[j+1] = almacenTemporal;
+    }else if(primeraFechaAntesNumero == primeraFechaSiguienteNumero){
+   
+      if(segundaFechaAntesNumero < segundaFechaSiguienteNumero){
+        almacenTemporal = copiaComillas[j];
+        copiaComillas[j+1] = copiaComillas[j];
+        copiaComillas[j] = copiaComillas[j+1];
+        
+      }
+    }
+    }
   }
 }
 
-
+console.log(copiaComillas)
 }//FIN DE LA FUNCION
