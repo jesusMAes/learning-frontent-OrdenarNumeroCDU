@@ -68,7 +68,7 @@ for(let i=0; i< arraysinpuntos.length; i++){
   //Se vienen mil ifs
 
 
-  let regexOperadores = /[+/=:*a/z()«»""']/g;
+  let regexOperadores = /[+/=:*a-z A-Z()«»""']/g;
   let regexComillas = /\"/g;
   let regexABC = /[a-z A-Z]/g;
   let regexApostrofo = /\'/g;
@@ -378,7 +378,7 @@ for(let i=0; i<copiaComillas.length; i++){
       let primeraFechaSiguiente;
       let segundaFechaSiguiente = '';
       if(indiceSeparadorSiguiente !=-1){
-         primeraFechaSiguiente = stringTemporalSiguiente.slice(indicePrimero, indiceSeparadorSiguiente-1);
+         primeraFechaSiguiente = stringTemporalSiguiente.slice(indiceSegundo+1, indiceSeparadorSiguiente-1);
 
         if(primeraFechaSiguiente.length==1){
           primeraFechaSiguiente +=000;
@@ -402,13 +402,12 @@ for(let i=0; i<copiaComillas.length; i++){
         }
         
       }else{
-        primeraFechaSiguiente = stringTemporalSiguiente.slice(indicePrimero+1, -1);
+        primeraFechaSiguiente = stringTemporalSiguiente.slice(indiceSegundo+1, -1);
       }
       let primeraFechaSiguienteNumero = parseInt(primeraFechaSiguiente);
       let segundaFechaSiguienteNumero = parseInt(segundaFechaSiguiente);
       
-    //QUEDO TRABAJANDO EN ARREGLAR PRIMERA FECHA SIGUIENTE NUMERO
-      console.log(primeraFechaSiguienteNumero);
+
     if(primeraFechaAntesNumero > primeraFechaSiguienteNumero){
       almacenTemporal = copiaComillas[j];
       copiaComillas[j] = copiaComillas[j+1];
@@ -416,15 +415,231 @@ for(let i=0; i<copiaComillas.length; i++){
     }else if(primeraFechaAntesNumero == primeraFechaSiguienteNumero){
    
       if(segundaFechaAntesNumero < segundaFechaSiguienteNumero){
-        almacenTemporal = copiaComillas[j];
+        almacenTemporal = copiaComillas[j+1];
         copiaComillas[j+1] = copiaComillas[j];
-        copiaComillas[j] = copiaComillas[j+1];
+        copiaComillas[j] = almacenTemporal;
         
       }
     }
     }
   }
+}//FIN ORDENAR COMILLAS TIEMPO----------------------------------
+
+
+
+//INICIO ORDENAR MÁS---------------------------------------------
+
+let copiaMas = masArray;
+
+for(let i=0; i<copiaMas.length;i++){
+  for(let j=0; j<copiaMas.length-1;j++){
+    let stringTemporal ='';
+    stringTemporal = copiaMas[j];
+    let indicePrimero = stringTemporal.indexOf('+');
+
+    let stringTemporalSiguiente ='';
+    stringTemporalSiguiente = copiaMas[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('+');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaMas[j];
+      copiaMas[j] = copiaMas[j+1];
+      copiaMas[j+1] = almacenTemporal;
+    }else if(antes== antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaMas[j];
+        copiaMas[j] = copiaMas[j+1];
+        copiaMas[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR MÁS-----------------------------------
+
+//INICIO ORDENAR DIVISION-----------------------------------
+
+//no te engañes por el nombre, que no divide, amplía
+let copiaDivision = divisionArray;
+
+for(let i=0; i< copiaDivision.length; i++){
+  for(let j=0; j<copiaDivision.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaDivision[j];
+    let indicePrimero = stringTemporal.indexOf('/');
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente = copiaDivision[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('/');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes= stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal =copiaDivision[j];
+      copiaDivision[j] = copiaDivision[j+1];
+      copiaDivision[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues= stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+      if(despues < despuesSiguiente){
+        almacenTemporal= copiaDivision[j];
+        copiaDivision[j] = copiaDivision[j+1];
+        copiaDivision[j+1]= almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR DIVISION------------------------------------
+
+//INICIO ORDENAR COLON--------------------------------------
+
+let copiaColon = colonArray;
+
+for(let i=0; i<copiaColon.length;i++){
+  for(let j=0; j<copiaColon.length-1; j++){
+
+    let stringTemporal='';
+    stringTemporal= copiaColon[j];
+    let indicePrimero = stringTemporal.indexOf(':');
+
+    let stringTemporalSiguiente='';
+    stringTemporalSiguiente = copiaColon[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf(':');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaColon[j];
+      copiaColon[j]=copiaColon[j+1];
+      copiaColon[j+1] =almacenTemporal;
+    }else if(antes==antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaColon[j];
+        copiaColon[j] = copiaColon[j+1];
+        copiaColon[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR COLON--------------------------------------
+
+//INICIO ORDENAR DOBLE COLON-------------------------------
+
+//para evitar lios con los indices lo mejor es detectar el primer colon y darle +2 para pasar al siguiente
+
+let copiaDobleColon = dobleColonArray;
+
+for(let i=0; i< copiaDobleColon.length; i++){
+  for(let j=0; j< copiaDobleColon.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaDobleColon[j];
+    let indicePrimero = stringTemporal.indexOf(':');
+
+    let stringTemporalSiguiente ='';
+    stringTemporalSiguiente = copiaDobleColon[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf(':');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaDobleColon[j];
+      copiaDobleColon[j] = copiaDobleColon[j+1];
+      copiaDobleColon[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero+2);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo+2);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaDobleColon[j];
+        copiaDobleColon[j] = copiaDobleColon[j+1];
+        copiaDobleColon[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR DOBLE COLON--------------------------------
+
+//INICIO ORDENAR ASTERISCO----------------------------------
+
+//he googleado y el orden del asterisco va como todos los demás porque a veces se usa también para cdu como auxiliar, cuando es notaciones ajenas pos a saber 
+
+let copiaAsterisco = asteriscoArray;
+
+for(let i=0; i< copiaAsterisco.length;i++){
+  for(let j=0; j<copiaAsterisco.length-1;j++){
+
+    let stringTemporal ='';
+    stringTemporal = copiaAsterisco[j];
+    let indicePrimero = stringTemporal.indexOf('*');
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente = copiaAsterisco[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('*');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes= stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaAsterisco[j];
+      copiaAsterisco[j] = copiaAsterisco[j+1];
+      copiaAsterisco[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaAsterisco[j];
+        copiaAsterisco[j] = copiaAsterisco[j+1];
+        copiaAsterisco[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR ASTERISCOS---------------------------------
+
+//INICIO ORDENAR ALFABETICO--------------------------------
+
+//en principio no debería haber problema con esto porque la comparación de strings va bien pero habrá que probar, encontrar el indice sí es distinto
+let copiaLetras = letrasArray;
+
+for(let i=0; i< copiaLetras.length; i++){
+  for(let j=0; j< copiaLetras.length; j++){
+
+    let stringTemporal ='';
+    stringTemporal = copiaLetras[j];
+    let indicePrimero = stringTemporal.search(/[A-Z a-z]/g);
+    //QUEDO AQUÍ TENEMOS QUE USAR SEARCH Y REGEX PARA OBTENER EL ÍNDICE
+    console.log("saa" +indicePrimero)
+  }
 }
 
-console.log(copiaComillas)
+console.log(copiaLetras);
 }//FIN DE LA FUNCION
