@@ -7,8 +7,7 @@ function ordenaCDU(){
   entrada= captura.value;
   entrada.trim();
   
-  //primera entrada de prueba: 
-  //   725 «20» , 725 (084.11) , 725 , 725.91 , 725 + 745 , 725=02
+
   
   let arrayEntrada = entrada.split(",");
  
@@ -23,13 +22,26 @@ function ordenaCDU(){
     let splitTemporal = arrayEntrada[i];
     let splitSegundo = splitTemporal.split('');
     for(let j=0; j<splitSegundo.length; j++){
+      let regexcerocero = /(.00)/g;
+      let regexPuntoCero = /(.0)/g;
+      
+      if(regexcerocero.test(splitTemporal)==false &&  regexPuntoCero.test(splitTemporal)==false){
+       
       if (splitSegundo[j] == ' ' || splitSegundo[j]=='.'){
         splitSegundo.splice(j, 1);
         j=0;
       }
+    }else{
+      if(splitSegundo[j]== ' '){
+        splitSegundo.splice(j,1);
+      }
     }
+  }
+  if(splitSegundo[1] != '.'){
     splitSegundo.splice(1, 0, '.');
+  }
     let entexto = splitSegundo.join("");
+    entexto.trim();
 
     arraysinpuntos.push(entexto);
     
@@ -68,7 +80,7 @@ for(let i=0; i< arraysinpuntos.length; i++){
   //Se vienen mil ifs
 
 
-  let regexOperadores = /[+/=:*a-z A-Z()«»""']/g;
+  let regexOperadores = /[+/=:*a-z A-Z()«»""'(\.00)]/g;
   let regexComillas = /\"/g;
   let regexABC = /[a-z A-Z]/g;
   let regexApostrofo = /\'/g;
@@ -112,6 +124,7 @@ for(let i=0; i< arraysinpuntos.length; i++){
   }
 
 }//FIN DEL FOR
+
 
 
 //ya están separados en su correspondiente array ahora toca ordenarlos
@@ -631,15 +644,242 @@ for(let i=0; i< copiaAsterisco.length;i++){
 let copiaLetras = letrasArray;
 
 for(let i=0; i< copiaLetras.length; i++){
-  for(let j=0; j< copiaLetras.length; j++){
+  for(let j=0; j< copiaLetras.length-1; j++){
 
     let stringTemporal ='';
     stringTemporal = copiaLetras[j];
     let indicePrimero = stringTemporal.search(/[A-Z a-z]/g);
-    //QUEDO AQUÍ TENEMOS QUE USAR SEARCH Y REGEX PARA OBTENER EL ÍNDICE
-    console.log("saa" +indicePrimero)
-  }
-}
 
-console.log(copiaLetras);
+    let stringTemporalSiguiente ='';
+    stringTemporalSiguiente = copiaLetras[j+1];
+    let indiceSegundo = stringTemporalSiguiente.search(/[A-Z a-z]/g);
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes= stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+    
+    if(antes > antesSiguiente){
+
+      almacenTemporal = copiaLetras[j];
+      copiaLetras[j] = copiaLetras[j+1];
+      copiaLetras[j+1] = almacenTemporal;
+    }else if(antes== antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaLetras[j];
+        copiaLetras[j] =copiaLetras[j+1];
+        copiaLetras[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR ALFABÉTICO-------------------------------------
+
+//INICIO ORDENAR CEROCERO--------------------------------------
+
+let copiaCeroCero = puntoCeroCeroArray; 
+
+for(let i=0; i<copiaCeroCero.length; i++){
+  for(let j=0; j<copiaCeroCero.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaCeroCero[j];
+    let indicePrimero = stringTemporal.indexOf('.00');
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente = copiaCeroCero[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('.00');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes= stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0,indiceSegundo);
+  
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaCeroCero[j];
+      copiaCeroCero[j]= copiaCeroCero[j+1];
+      copiaCeroCero[j+1]= almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente  = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaCeroCero[j];
+        copiaCeroCero[j] = copiaCeroCero[j+1];
+        copiaCeroCero[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN CERO CERO-------------------------------------------------
+
+//INICIO ORDENAR GUIÓN CERO--------------------------------
+
+let copiaGuionCero = guionCeroArray;
+
+for(let i=0; i< copiaGuionCero.length; i++){
+  for(let j=0; j<copiaGuionCero.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaGuionCero[j];
+    let indicePrimero = stringTemporal.indexOf('-');
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente = copiaGuionCero[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('-');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes= stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente ){
+      almacenTemporal = copiaGuionCero[j];
+      copiaGuionCero[j] = copiaGuionCero[j+1];
+      copiaGuionCero[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaGuionCero[j];
+        copiaGuionCero[j] = copiaGuionCero[j+1];
+        copiaGuionCero[j+1]= almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR GUION CERO-------------------------------------
+
+//INICIO ORDENAR GUION NUMEROS--------------------------------
+
+let copiaGuionNumero = guionNumeroArray;
+
+for(let i=0; i< copiaGuionNumero.length; i++){
+  for( let j=0; j<copiaGuionNumero.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaGuionNumero[j];
+    let indicePrimero = stringTemporal.indexOf('-');
+
+    let stringTemporalSiguiente= '';
+    stringTemporalSiguiente = copiaGuionNumero[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('-');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes =stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaGuionNumero[j];
+      copiaGuionNumero[j] = copiaGuionNumero[j+1];
+      copiaGuionNumero[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaGuionNumero[j];
+        copiaGuionNumero[j]= copiaGuionNumero[j+1];
+        copiaGuionNumero[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR GUION NUMERO--------------------------------
+
+//INICIO ORDENAR PUNTO CERO--------------------------------
+
+let copiaPuntoCero = puntoCeroArray;
+
+
+for(let i=0; i<copiaPuntoCero.length; i++){
+  for(let j=0; j<copiaPuntoCero.length-1; j++){
+
+    let stringTemporal = '';
+    stringTemporal = copiaPuntoCero[j];
+    let indicePrimero =stringTemporal.indexOf('.0');
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente = copiaPuntoCero[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf('.0');
+
+    let antes;
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+  
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaPuntoCero[j];
+      copiaPuntoCero[j] = copiaPuntoCero[j+1];
+      copiaPuntoCero[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaPuntoCero[j];
+        copiaPuntoCero[j] = copiaPuntoCero[j+1];
+        copiaPuntoCero[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ORDENAR PUNTO CERO----------------------------------------
+
+//INICIO ORDENAR APOSTROFO-------------------------------------
+
+let copiaApostrofo = apostrofoArray;
+
+for(let i=0; i<copiaApostrofo.length; i++){
+  for (let j = 0; j<copiaApostrofo.length-1; j++){
+    let stringTemporal = '';
+    stringTemporal = copiaApostrofo[j];
+    let indicePrimero = stringTemporal.indexOf("'");
+
+    let stringTemporalSiguiente = '';
+    stringTemporalSiguiente =copiaApostrofo[j+1];
+    let indiceSegundo = stringTemporalSiguiente.indexOf("'");
+
+    let antes; 
+    let antesSiguiente;
+    let almacenTemporal;
+
+    antes = stringTemporal.slice(0, indicePrimero);
+    antesSiguiente = stringTemporalSiguiente.slice(0, indiceSegundo);
+
+    if(antes > antesSiguiente){
+      almacenTemporal = copiaApostrofo[j];
+      copiaApostrofo[j] = copiaApostrofo[j+1];
+      copiaApostrofo[j+1] = almacenTemporal;
+    }else if(antes == antesSiguiente){
+      let despues = stringTemporal.slice(indicePrimero);
+      let despuesSiguiente = stringTemporalSiguiente.slice(indiceSegundo);
+
+      if(despues > despuesSiguiente){
+        almacenTemporal = copiaApostrofo[j];
+        copiaApostrofo[j] = copiaApostrofo[j+1];
+        copiaApostrofo[j+1] = almacenTemporal;
+      }
+    }
+  }
+}//FIN ULTIMO ORDENAR------------------------------------
+
+
+
+//Vale, ahora hay que coger el de numeros normales y en el orden de los operadores y metiendolos donde corresponde
+
+//entonces la idea es ir recorriendo ambos arrays con un bucle doble, el grande con el array a insertar y el de dentro recorre el array en el que se insertará, se puede usar splice para meterlo en el indice correcto
+
 }//FIN DE LA FUNCION
