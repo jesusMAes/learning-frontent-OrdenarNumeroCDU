@@ -22,8 +22,8 @@ function ordenaCDU(){
     let splitTemporal = arrayEntrada[i];
     let splitSegundo = splitTemporal.split('');
     for(let j=0; j<splitSegundo.length; j++){
-      let regexcerocero = /(.00)/g;
-      let regexPuntoCero = /(.0)/g;
+      let regexcerocero = /(\.00)/g;
+      let regexPuntoCero = /(\.0)/g;
       
       if(regexcerocero.test(splitTemporal)==false &&  regexPuntoCero.test(splitTemporal)==false){
        
@@ -46,6 +46,7 @@ function ordenaCDU(){
     arraysinpuntos.push(entexto);
     
   }
+  console.log("array sin puntos: "+arraysinpuntos)
 
   //fin del for para los puntos, ahora vamos a recorrer el array pasando cada elemento a su operador, voy a hacer un array para cada simbolo. fuerza bruta joer.
   let igualArray=[]; // = lengua
@@ -80,12 +81,14 @@ for(let i=0; i< arraysinpuntos.length; i++){
   //Se vienen mil ifs
 
 
-  let regexOperadores = /[+/=:*a-z A-Z()«»""'(\.00)]/g;
+  let regexOperadores = /[+/=:*a-z A-Z()«»]/g;
   let regexComillas = /\"/g;
   let regexABC = /[a-z A-Z]/g;
   let regexApostrofo = /\'/g;
-    
-  if(regexOperadores.test(stringOperar) == false){
+
+  let testRegexOperadores = regexOperadores.test(stringOperar);
+   // console.log(regexOperadores.test(stringOperar));
+  if(testRegexOperadores == false){
     numeroSimpleArray.push(arraysinpuntos[i]);
   } else if(stringOperar.indexOf('(=') !=-1){
     parentesisIgualArray.push(arraysinpuntos[i])
@@ -119,9 +122,9 @@ for(let i=0; i< arraysinpuntos.length; i++){
     guionNumeroArray.push(arraysinpuntos[i]);
   }else if(stringOperar.indexOf('.0') !=-1){
     puntoCeroArray.push(arraysinpuntos[i]);
-  }else if(regexApostrofo.test(stringOperar)==true){
+   }else if(regexApostrofo.test(stringOperar)==true){
     apostrofoArray.push(arraysinpuntos[i]);
-  }
+   }
 
 }//FIN DEL FOR
 
@@ -136,7 +139,7 @@ numeroSimpleArray.sort();
 //ah pues si que lo ordena sí, voy a copiarlo a un arrayfinal que será en el que operaremos
 let arrayFinal = numeroSimpleArray;
 
-
+console.log("primer numero simple "+numeroSimpleArray)
 
 //ORDENAR IGUALARRAY........................
 
@@ -187,7 +190,7 @@ for (let i=0; i<copiaIgualArray.length; i++){
   }
 }
 //FIN ORDENAR IGUAL ARRAY------------------------------------
-  
+
 //INICIO ORDENAR PARENTESISCERO ARRAY
 let copiaParentesisCero = parentesisCeroArray;
 
@@ -877,9 +880,81 @@ for(let i=0; i<copiaApostrofo.length; i++){
 }//FIN ULTIMO ORDENAR------------------------------------
 
 
-
+console.log("llegue después de ordenar todo")
 //Vale, ahora hay que coger el de numeros normales y en el orden de los operadores y metiendolos donde corresponde
 
 //entonces la idea es ir recorriendo ambos arrays con un bucle doble, el grande con el array a insertar y el de dentro recorre el array en el que se insertará, se puede usar splice para meterlo en el indice correcto
 
+//insertamos array mas 
+
+for (let i= 0; i< copiaMas.length;i++){
+  for (let j=0; j<=arrayFinal.length;j++){
+
+ 
+    let stringComparar = copiaMas[i];
+    let indicePrimero = stringComparar.indexOf('+');
+    let antes = stringComparar.slice(0, indicePrimero);
+
+
+    let stringInsertar = arrayFinal[j];
+    if(antes != '' && stringInsertar!=''){
+    if (antes <= stringInsertar){
+      arrayFinal.splice(j, 0, copiaMas[i]);
+      break
+    }
+  }
+  }
+}
+if(arrayFinal.length ==0 && copiaMas.length !=0){
+  for(let i=0; i<copiaMas.length;i++){
+    arrayFinal.push(copiaMas[i]);
+  }
+}
+//añadir los de division
+
+for(let i=0; i<copiaDivision.length;i++){
+  for(let j=0; j<arrayFinal.length;j++){
+    //vale comparamos lo de antes del simbolo, añadimos una comprobación para ver si el siguiente elemento tiene el mismo numero y un más en cuyo caso no lo metemos
+    let stringComparar = arrayFinal[j];
+    let indicePrimero = stringComparar.indexOf('+');
+    let antes = stringComparar.slice(0, indicePrimero);
+
+    let stringSiguiente = arrayFinal[j+1]//para ver si después va más o numero normal
+    let indiceSiguiente = stringSiguiente.indexOf('+');
+    let antesSiguiente = stringSiguiente.slice(0, indiceSiguiente);
+
+    let stringDivision = copiaDivision[i];
+    let indiceDivision = stringDivision.indexOf('/');
+    let antesDivision = stringDivision.slice(0, indiceDivision);
+
+    if(indicePrimero==-1 && antesDivision>= antes && indiceSiguiente==-1 && antesDivision<=antesSiguiente){
+      arrayFinal.splice(j,0,copiaDivision[i]);
+      break
+    }else if(indicePrimero !=-1 && indiceSiguiente ==-1 && antesDivision >= antes && antesDivision <= antesSiguiente ){
+      arrayFinal.splice(j+2,0, copiaDivision[i]);
+      break
+  }else if(indicePrimero !=-1&& antesDivision >=antes &&indiceSiguiente !=-1 && antesDivision >=antesSiguiente){
+      break
+    }
+  }
+}
+
+console.log("mas "+ copiaMas);
+console.log("division "+ copiaDivision);
+console.log("numero normal "+numeroSimpleArray);
+console.log("colon "+ copiaColon);
+console.log("doble colon " + copiaDobleColon);
+console.log("igual " + copiaIgualArray);
+console.log("parentesis cero " + copiaParentesisCero);
+console.log("parentesis numero " + copiaParentesisNumero);
+console.log("parentesis igual " + copiaParentesisIgual);
+console.log("comillas" + copiaComillas);
+console.log("asterisco" + copiaAsterisco);
+console.log("Letras" + copiaLetras);
+console.log("cero cero" + copiaCeroCero);
+console.log("guion cero" + copiaGuionCero);
+console.log("guion numero " + copiaGuionNumero);
+console.log("punto cero " + copiaPuntoCero);
+console.log("apostrofo " + copiaApostrofo);
+console.log("array final = "+arrayFinal)
 }//FIN DE LA FUNCION
