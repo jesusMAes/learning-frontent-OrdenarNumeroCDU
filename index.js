@@ -917,32 +917,192 @@ for(let i=0; i<copiaDivision.length;i++){
     //vale comparamos lo de antes del simbolo, añadimos una comprobación para ver si el siguiente elemento tiene el mismo numero y un más en cuyo caso no lo metemos
     let stringComparar = arrayFinal[j];
     let indicePrimero = stringComparar.indexOf('+');
-    let antes = stringComparar.slice(0, indicePrimero);
+    let antes;
+    if(indicePrimero != -1){
+    antes = stringComparar.slice(0, indicePrimero);
+    } else {
+      antes = stringComparar;
+    }
 
-    let stringSiguiente = arrayFinal[j+1]//para ver si después va más o numero normal
-    let indiceSiguiente = stringSiguiente.indexOf('+');
-    let antesSiguiente = stringSiguiente.slice(0, indiceSiguiente);
+    let antesSiguiente;
+    if(j != arrayFinal.length-1){
+      let stringSiguiente = arrayFinal[j+1]//para ver si después va más o numero normal
+       antesSiguiente;
+      let indiceSiguiente = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      if(indiceSiguiente !=-1){
+        antesSiguiente = stringSiguiente.slice(0,indiceSiguiente )
+      }else if(indiceSiguienteDivision != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+      }else{
+        antesSiguiente = stringSiguiente
+      }
+    }
+    
+    
 
     let stringDivision = copiaDivision[i];
     let indiceDivision = stringDivision.indexOf('/');
     let antesDivision = stringDivision.slice(0, indiceDivision);
 
-    if(indicePrimero==-1 && antesDivision>= antes && indiceSiguiente==-1 && antesDivision<=antesSiguiente){
-      arrayFinal.splice(j,0,copiaDivision[i]);
+    let regexOperadores = /[+/=:*a-z A-Z()«»]/g;
+
+    if(j==0){
+      if(antesDivision < antes){
+        arrayFinal.splice(j,0, copiaDivision[i]);
+        break
+      }
+    }else if(regexOperadores.test(antes)==false && antesDivision== antes){
+      arrayFinal.splice(j,0, copiaDivision[i])
       break
-    }else if(indicePrimero !=-1 && indiceSiguiente ==-1 && antesDivision >= antes && antesDivision <= antesSiguiente ){
-      arrayFinal.splice(j+2,0, copiaDivision[i]);
-      break
-  }else if(indicePrimero !=-1&& antesDivision >=antes &&indiceSiguiente !=-1 && antesDivision >=antesSiguiente){
-      break
-    }
+    } else if(antesDivision > antes && antesDivision < antesSiguiente){
+
+      arrayFinal.splice(j+1,0, copiaDivision[i]);
+
+    }else if(j == arrayFinal.length-1 &&regexOperadores.test(stringComparar)== false && antesDivision > stringComparar){
+     //miramos si el ultimo numero del array es numero normal y si el nuestro es mayor entonces lo metemos después
+
+     arrayFinal.splice(j+1,0, copiaDivision[i]);
+     break
+    } 
+   
   }
 }
 
-console.log("mas "+ copiaMas);
-console.log("division "+ copiaDivision);
-console.log("numero normal "+numeroSimpleArray);
-console.log("colon "+ copiaColon);
+if(arrayFinal.length==0){
+  arrayFinal.push(copiaDivision)
+}
+
+//Añadir colon. No debería tener misterio, buscamos el punto en el que sea mayor o igual que el anterior y menor que el siguiente, usamos ifs para separar la parte sin signo para compararlos bien 
+
+for(let i=0;i < copiaColon.length; i++){
+  for(let j=0; j<arrayFinal.length;j++){
+
+    let stringColon = copiaColon[i];
+    let indiceColon = stringColon.indexOf(':');
+    let antesColon = stringColon.slice(0, indiceColon);
+
+    let stringComparar = arrayFinal[j];
+    //indices para cada cosa luego el que no sea -1 se usa para el slice
+    let indiceSuma = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceComparar = stringComparar.indexOf(':');
+    let antes;
+    if(indiceSuma != -1){
+      antes= stringComparar.slice(0, indiceSuma);
+    }else if(indiceDivision !=-1){
+      antes= stringComparar.slice(0, indiceDivision);
+    }else if(indiceComparar != -1){
+      antes = stringComparar.slice(0, indiceComparar);
+    }else{
+      antes = stringComparar;
+    }
+
+    let stringSiguiente
+    let indiceSumaSiguiente
+    let indiceDivisionSiguiente 
+    let indiceSiguienteColon
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+    stringSiguiente = arrayFinal[j+1];
+     indiceSumaSiguiente = stringSiguiente.indexOf('+');
+     indiceDivisionSiguiente = stringSiguiente.indexOf('/');
+     indiceSiguienteColon = stringSiguiente.indexOf(':');
+    
+    if(indiceSumaSiguiente !=-1){
+      antesSiguiente = stringSiguiente.slice(0, indiceSuma);
+    }else if(indiceDivisionSiguiente != -1){
+      antesSiguiente = stringSiguiente.slice(0, indiceDivisionSiguiente);
+    }else if(indiceSiguienteColon !=-1){
+      antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+    }else{
+      antesSiguiente = stringSiguiente;
+    }
+  }
+
+    if(j==0 && antesColon < antes){
+      arrayFinal.splice(j, 0, copiaColon[i]);
+      break;
+    }else if(antesColon >= antes && antesColon < antesSiguiente){
+      
+        arrayFinal.splice(j+1,0, copiaColon[i]);
+        break;
+    }else if(j == arrayFinal.length-1 ){
+      
+      arrayFinal.splice(j+1,0, copiaColon[i]);
+      break;
+    }
+  }
+}
+if(arrayFinal.length==0){
+  arrayFinal.push(copiaColon);
+}
+
+//vamos con doble colon, a grandes rasgos funciona igual que el anterior porque ya va ordenado y solo hay que mirar la parte de delante
+
+for(let i=0; i<copiaDobleColon.length;i++){
+  for(let j=0; j<arrayFinal.length;j++){
+
+    //como antes pero añadiendo más casos a los ifs de antes
+    let stringDobleColon = copiaDobleColon[i];
+    let indiceDobleColon = stringDobleColon.indexOf(':');
+    let antesDobleColon = stringDobleColon.slice(0, indiceDobleColon);
+
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let antes;
+
+    if(indiceMas != -1){
+      antes = stringComparar.slice(0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice(0, indiceDivision);
+    }else if(indiceColon != -1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else {
+      antes = stringComparar;
+    }
+
+    let stringSiguiente;
+    let antesSiguiente;
+    if(j!= arrayFinal.length-1){
+     stringSiguiente = arrayFinal[j+1];
+    let indiceSiguienteMas = stringSiguiente.indexOf('+');
+    let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+    let indiceSiguienteColon = stringSiguiente.indexOf(':');
+     antesSiguiente;
+    if(indiceSiguienteMas !=-1){
+      antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+    }else if(indiceSiguienteDivision != -1){
+      antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+    }else if(indiceSiguienteColon != -1){
+      antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+    }else{
+      antesSiguiente = stringSiguiente
+    }
+  }
+    if(j==0 && antesDobleColon < antes){
+      arrayFinal.splice(j,0, copiaDobleColon[i]);
+      break;
+    }else if(antesDobleColon >= antes && antesDobleColon < antesSiguiente){
+      arrayFinal.splice(j+1,0, copiaDobleColon[i]);
+      break;
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1, 0, copiaDobleColon[i]);
+      break
+    }
+    
+  }
+}
+
+
+console.log("mas "+ copiaMas);//hecho
+console.log("division "+ copiaDivision);//hecho
+console.log("numero normal "+numeroSimpleArray);//hecho
+console.log("colon "+ copiaColon);//hecho
 console.log("doble colon " + copiaDobleColon);
 console.log("igual " + copiaIgualArray);
 console.log("parentesis cero " + copiaParentesisCero);
