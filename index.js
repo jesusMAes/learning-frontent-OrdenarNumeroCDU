@@ -81,14 +81,18 @@ for(let i=0; i< arraysinpuntos.length; i++){
   //Se vienen mil ifs
 
 
-  let regexOperadores = /[+/=:*a-z A-Z()""«»]/g;
+  let regexOperadores = /[+/=:*a-z A-Z()""«»'-]/g;
   let regexComillas = /\"/g;
   let regexABC = /[a-z A-Z]/g;
   let regexApostrofo = /\'/g;
+  let regexcerocero = /(\.00)/g;
+  let regexPuntoCero = /(\.0)/g
+  let testRegexCeroCero= regexcerocero.test(stringOperar);
+  let testRexepuntocero = regexPuntoCero.test(stringOperar);
 
   let testRegexOperadores = regexOperadores.test(stringOperar);
    // console.log(regexOperadores.test(stringOperar));
-  if(testRegexOperadores == false){
+  if(testRegexOperadores == false && testRegexCeroCero==false && testRexepuntocero==false){
     numeroSimpleArray.push(arraysinpuntos[i]);
   } else if(stringOperar.indexOf('(=') !=-1){
     parentesisIgualArray.push(arraysinpuntos[i])
@@ -1602,7 +1606,775 @@ for(let i=0; i<copiaAsterisco.length;i++){
   }
 }
 
-//usando esto de entrada de prueba 1, 1/45, 1+34, 1:23, 1=111, 1(034),1(345), 1::24, 1(=490),1"2005", 2, 2/65, 2"1900/2000",2"2005", 2"1990/2000", 3, 3(490), 1*asd, 2*asd, 3*asd
+if(arrayFinal.length == 0){
+  arrayFinal.push(copiaAsterisco);
+}
+
+//para copialetras hay que usar el metodo search con un regex a-z A-Z porque indexof no vale para usar regex
+
+for(let i=0; i<copiaLetras.length;i++){
+  for(let j= 0; j<arrayFinal.length; j++){
+
+    let stringLetras = copiaLetras[i];
+    let indiceLetras = stringLetras.search(/[A-Z a-z]/g);
+    let antesLetras = stringLetras.slice(0, indiceLetras);
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let indiceIgual = stringComparar.indexOf('=');
+    let indiceParentesis = stringComparar.indexOf('(');
+    let indiceComillas = stringComparar.indexOf('\"');
+    let indiceAsterisco = stringComparar.indexOf('*');
+    let indiceAntesLetras = stringComparar.search(/[A-Z a-z]/g);
+    let antes;
+
+    if(indiceDivision !=-1 && indiceComillas !=-1){
+      indiceDivision = indiceComillas;
+    }
+    if(indiceIgual != -1 && indiceParentesis != -1){
+      indiceIgual = indiceParentesis;
+    }
+    //a veces tras asterisco hay letras
+    if(indiceAsterisco !=-1 && indiceAntesLetras !=-1){
+      indiceAntesLetras = indiceAsterisco;
+    }
+
+    if(indiceMas !=-1){
+      antes = stringComparar.slice(0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice(0, indiceDivision);
+    }else if(indiceColon !=-1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else if(indiceIgual !=-1){
+      antes = stringComparar.slice(0, indiceIgual);
+    }else if(indiceParentesis !=-1){
+      antes = stringComparar.slice(0, indiceParentesis);
+    }else if(indiceComillas != -1){
+      antes = stringComparar.slice(0, indiceComillas);
+    }else if(indiceAsterisco !=-1){
+      antes =stringComparar.slice(0, indiceAsterisco);
+    }else if(indiceAntesLetras != -1){
+      antes = stringComparar.slice(0, indiceAntesLetras);
+    }else{
+      antes = stringComparar;
+    }
+
+    let stringSiguiente;
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+
+      stringSiguiente = arrayFinal[j+1];
+      let indiceSiguienteMas = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      let indiceSiguienteColon = stringSiguiente.indexOf(':');
+      let indiceSiguienteIgual = stringSiguiente.indexOf('=');
+      let indiceSiguienteParentesis = stringSiguiente.indexOf('(');
+      let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
+      let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Z a-z]/g);
+
+      if(indiceSiguienteDivision != -1 && indiceSiguienteComillas !=-1){
+        indiceSiguienteDivision = indiceSiguienteComillas;
+      }
+      if(indiceSiguienteIgual != -1 && indiceSiguienteParentesis!=-1){
+        indiceSiguienteIgual = indiceSiguienteParentesis;
+      }
+      if(indiceSiguienteAsterisco !=-1 && indiceSiguienteLetras !=-1){
+        indiceSiguienteLetras = indiceSiguienteAsterisco;
+      }
+
+      if(indiceSiguienteMas !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+      }else if(indiceSiguienteDivision !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+      }else if(indiceSiguienteColon !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+      }else if(indiceSiguienteIgual !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteIgual);
+      }else if(indiceSiguienteParentesis != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteParentesis);
+      }else if(indiceSiguienteComillas !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteComillas);
+      }else if(indiceSiguienteAsterisco !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteAsterisco);
+      }else if(indiceSiguienteLetras !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteLetras);
+      }else{
+        antesSiguiente = stringSiguiente;
+      }
+    }
+
+   
+
+    if(j== 0 && antesLetras < antes){
+      arrayFinal.splice(j,0, copiaLetras[i]);
+      break;
+    }else if(antesLetras >= antes && antesLetras < antesSiguiente){
+      arrayFinal.splice(j+1, 0, copiaLetras[i]);
+      break
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1, 0, copiaLetras[i]);
+      break
+    }
+
+  }
+}
+
+if(arrayFinal.length==0){
+  arrayFinal.push(copiaLetras);
+}
+
+//ahora con 00 no debería tener problema es igual
+
+for(let i=0; i<copiaCeroCero.length;i++){
+  for(let j=0; j<arrayFinal.length;j++){
+
+    let stringCero = copiaCeroCero[i];
+    let indiceCero = stringCero.indexOf('.00');
+    let antesCero = stringCero.slice(0, indiceCero+1);
+    
+   
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let indiceIgual = stringComparar.indexOf('=');
+    let indiceParentesis = stringComparar.indexOf('(');
+    let indiceComillas = stringComparar.indexOf('\"');
+    let indiceAsterisco = stringComparar.indexOf('*');
+    let indiceLetras = stringComparar.search(/[A-Z a-z]/g);
+    let indiceAntesCero = stringComparar.indexOf(".00");
+    let antes;
+
+    if(indiceDivision !=-1 && indiceComillas !=-1){
+      indiceDivision = indiceComillas;
+    }
+    if(indiceIgual != -1 && indiceParentesis !=-1){
+      indiceIgual = indiceParentesis;
+    }
+    if(indiceAsterisco != -1 && indiceLetras != -1){
+      indiceLetras = indiceAsterisco;
+    }
+
+    if(indiceMas !=-1){
+      antes = stringComparar.slice(0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice(0, indiceDivision);
+    }else if(indiceColon != -1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else if(indiceIgual != -1){
+      antes = stringComparar.slice(0, indiceIgual);
+    }else if(indiceParentesis != -1){
+      antes = stringComparar.slice(0, indiceParentesis);
+    }else if(indiceComillas != -1){
+      antes = stringComparar.slice(0, indiceComillas);
+    }else if(indiceAsterisco != -1){
+      antes = stringComparar.slice(0, indiceAsterisco);
+    }else if(indiceLetras != -1){
+      antes = stringComparar.slice(0, indiceLetras);
+    }else if(indiceAntesCero != -1){
+      antes = stringComparar.slice(0, indiceAntesCero+1);
+    }else{
+      antes = stringComparar;
+    }
+
+    let stringSiguiente;
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+
+      stringSiguiente = arrayFinal[j+1];
+
+      let indiceSiguienteMas = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      let indiceSiguienteColon = stringSiguiente.indexOf(':');
+      let indiceSiguienteIgual = stringSiguiente.indexOf('=');
+      let indiceSiguienteParentesis = stringSiguiente.indexOf('(');
+      let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
+      let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Za-z]/g);
+      let indiceSiguienteCero = stringSiguiente.indexOf('.00');
+      
+
+      if(indiceSiguienteDivision != -1 &&  indiceSiguienteComillas != -1){
+        indiceSiguienteDivision = indiceSiguienteComillas;
+      }
+      if(indiceSiguienteIgual != -1 && indiceSiguienteParentesis != -1){
+        indiceSiguienteIgual = indiceSiguienteParentesis;
+      }
+      if(indiceSiguienteAsterisco !=-1 && indiceSiguienteLetras !=-1){
+        indiceSiguienteLetras = indiceSiguienteAsterisco;
+      }
+      
+      if(indiceSiguienteMas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+      }else if(indiceSiguienteDivision != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+      }else if(indiceSiguienteColon != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+      }else if(indiceSiguienteIgual !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteIgual);
+      }else if(indiceSiguienteParentesis != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteParentesis);
+      }else if(indiceSiguienteComillas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteComillas);
+      }else if(indiceSiguienteAsterisco != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteAsterisco);
+      }else if(indiceSiguienteLetras != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteLetras);
+      }else if(indiceSiguienteCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteCero+1);
+      }else{
+        antesSiguiente = stringSiguiente;
+      }
+    }
+
+    if(j==0 && antesCero <antes){
+      arrayFinal.splice(j,0, copiaCeroCero[i]);
+      break
+    }else if(antesCero >= antes && antesCero < antesSiguiente){
+      arrayFinal.splice(j+1, 0, copiaCeroCero[i]);
+      break
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1,0, copiaCeroCero[i]);
+      break
+    }
+
+  }
+}
+
+if(arrayFinal.length == 0){
+  arrayFinal.push(copiaCeroCero);
+}
+
+//guión cero
+
+for(let i=0; i<copiaGuionCero.length;i++){
+  for(let j=0; j<arrayFinal.length;j++){
+
+    let stringGuionCero = copiaGuionCero[i];
+    let indiceGuion = stringGuionCero.indexOf('-');
+    let antesGuion = stringGuionCero.slice(0, indiceGuion);
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let indiceIgual = stringComparar.indexOf('=');
+    let indiceParentesis = stringComparar.indexOf('(');
+    let indiceComillas = stringComparar.indexOf('\"');
+    let indiceAsterisco = stringComparar.indexOf('*');
+    let indiceLetras = stringComparar.search(/[A-Z a-z]/g);
+    let indiceCero = stringComparar.indexOf(".00");
+    let indiceAntesGuion = stringComparar.indexOf('-');
+    let antes;
+
+    if(indiceDivision != -1 && indiceComillas != -1){
+      indiceDivision = indiceComillas;
+    }
+    if(indiceIgual !=-1 &&indiceParentesis != -1){
+      indiceIgual = indiceParentesis;
+    }
+    if(indiceAsterisco!= -1 && indiceLetras != -1){
+      indiceLetras = indiceAsterisco;
+    }
+
+    if(indiceMas != -1){
+      antes = stringComparar.slice(0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice(0, indiceDivision);
+    }else if(indiceColon != -1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else if(indiceIgual != -1){
+      antes = stringComparar.slice(0, indiceIgual);
+    }else if(indiceParentesis != -1){
+      antes = stringComparar.slice(0, indiceParentesis);
+    }else if(indiceComillas != -1){
+      antes = stringComparar.slice(0, indiceComillas);
+    }else if(indiceAsterisco != -1){
+      antes = stringComparar.slice(0, indiceAsterisco);
+    }else if(indiceLetras != -1){
+      antes = stringComparar.slice(0,indiceLetras);
+    }else if(indiceCero != -1){
+      antes = stringComparar.slice(0, indiceCero+1);
+    }else if(indiceAntesGuion != -1){
+      antes = stringComparar.slice(0, indiceAntesGuion);
+    }else {
+      antes = stringComparar;
+    }
+
+
+    let stringSiguiente;
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+      
+      stringSiguiente = arrayFinal[j+1];
+      let indiceSiguienteMas = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      let indiceSiguienteColon = stringSiguiente.indexOf(':');
+      let indiceSiguienteIgual = stringSiguiente.indexOf('=');
+      let indiceSiguienteParentesis = stringSiguiente.indexOf('(');
+      let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
+      let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Z a-z]/g);
+      let indiceSiguienteCero = stringSiguiente.indexOf('.00');
+
+      if(indiceSiguienteDivision != -1 && indiceSiguienteComillas != -1){
+        indiceSiguienteDivision = indiceSiguienteComillas;
+      }
+      if(indiceSiguienteIgual != -1 && indiceSiguienteParentesis != -1){
+        indiceSiguienteIgual = indiceSiguienteParentesis;
+      }
+       if(indiceSiguienteAsterisco != -1 && indiceSiguienteLetras != -1){
+        indiceSiguienteLetras = indiceSiguienteAsterisco;
+       }
+
+       if(indiceSiguienteMas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+       }else if(indiceSiguienteDivision != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+       }else if(indiceSiguienteColon != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+       }else if(indiceSiguienteIgual != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteIgual);
+       }else if(indiceSiguienteParentesis != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteParentesis);
+       }else if(indiceSiguienteComillas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteComillas);
+       }else if(indiceSiguienteAsterisco != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteAsterisco);
+       }else if(indiceSiguienteLetras != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteLetras);
+       }else if(indiceSiguienteCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteCero+1);
+       }
+
+    }
+
+    if(j==0 && antesGuion < antes){
+      arrayFinal.splice(j,0, copiaGuionCero[i]);
+      break
+    }else if(antesGuion >= antes && antesGuion < antesSiguiente){
+      arrayFinal.splice(j+1,0, copiaGuionCero[i]);
+      break
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1,0, copiaGuionCero[i]);
+      break
+    }
+  }
+}
+
+if(arrayFinal.length == 0){
+  arrayFinal.push(copiaGuionCero);
+}
+
+//copia guión numero, hay que usar regex /(-[1-9])/g para cogerlo
+
+for(let i=0; i<copiaGuionNumero.length; i++){
+  for(let j=0; j<arrayFinal.length;j++){
+
+    let stringGuionNumero = copiaGuionNumero[i];
+    let indiceGuionNumero = stringGuionNumero.indexOf('-');
+    let antesGuion = stringGuionNumero.slice(0, indiceGuionNumero);
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let indiceIgual = stringComparar.indexOf('=');
+    let indiceParentesis = stringComparar.indexOf('(');
+    let indiceComillas = stringComparar.indexOf('\"');
+    let indiceAsterisco = stringComparar.indexOf('*');
+    let indiceLetras = stringComparar.search(/[A-Za-z]/g);
+    let indiceCero = stringComparar.indexOf('.00');
+    let indiceGuionCero = stringComparar.indexOf('-0');
+    let indiceAntesNumero = stringComparar.search(/(-[1-9])/g);
+    let antes;
+
+    if(indiceDivision !=-1 && indiceComillas != -1){
+      indiceDivision = indiceComillas;
+    }
+    if(indiceIgual != -1 && indiceParentesis != -1){
+      indiceIgual = indiceParentesis;
+    }
+    if(indiceLetras != -1 && indiceAsterisco != -1){
+      indiceLetras = indiceAsterisco;
+    }
+
+    if(indiceMas != -1){
+      antes = stringComparar.slice(0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice(0, indiceDivision);
+    }else if(indiceColon != -1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else if(indiceIgual != -1){
+      antes = stringComparar.slice(0, indiceIgual);
+    }else if(indiceParentesis != -1){
+      antes = stringComparar.slice(0, indiceParentesis);
+    }else if(indiceComillas != -1){
+      antes = stringComparar.slice(0, indiceComillas);
+    }else if(indiceAsterisco != -1){
+      antes = stringComparar.slice (0, indiceAsterisco);
+    }else if(indiceLetras != -1){
+      antes = stringComparar.slice(0, indiceLetras);
+    }else if(indiceCero != -1){
+      antes = stringComparar.slice(0, indiceCero+1);
+    }else if(indiceGuionCero != -1){
+      antes = stringComparar.slice(0, indiceGuionCero+1);
+    }else if(indiceAntesNumero != -1){
+      antes = stringComparar.slice(0, indiceAntesNumero+1);
+    }else{
+      antes = stringComparar;
+    }
+
+    let stringSiguiente;
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+
+      stringSiguiente = arrayFinal[j+1];
+      let indiceSiguienteMas = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      let indiceSiguienteColon = stringSiguiente.indexOf(':');
+      let indiceSiguienteIgual = stringSiguiente.indexOf('=');
+      let indiceSiguienteParentesis= stringSiguiente.indexOf('(');
+      let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
+      let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Za-z]/g);
+      let indiceSiguienteCero = stringSiguiente.indexOf('.00');
+      let indiceSiguienteGuionCero = stringSiguiente.indexOf('-0');
+
+      if(indiceSiguienteDivision != -1 && indiceSiguienteComillas != -1){
+        indiceSiguienteDivision = indiceSiguienteComillas;
+      }
+      if(indiceSiguienteIgual != -1 && indiceSiguienteParentesis!= -1){
+        indiceSiguienteIgual = indiceSiguienteParentesis;
+      }
+      if(indiceSiguienteLetras != -1 && indiceSiguienteAsterisco != -1){
+        indiceSiguienteLetras = indiceSiguienteAsterisco;
+      }
+
+
+      if(indiceSiguienteMas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+      }else if(indiceSiguienteDivision != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+      }else if(indiceSiguienteColon != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+      }else if(indiceSiguienteIgual != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteIgual);
+      }else if(indiceSiguienteParentesis !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteParentesis);
+      }else if(indiceSiguienteComillas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteComillas);
+      }else if(indiceSiguienteAsterisco != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteAsterisco);
+      }else if(indiceSiguienteLetras !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteLetras);
+      }else if(indiceSiguienteCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteCero+1);
+      }else if(indiceSiguienteGuionCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteGuionCero);
+      }else {
+        antesSiguiente = stringSiguiente;
+      }
+    }
+
+    if(j==0 && antesGuion <antes){
+      arrayFinal.splice (j,0, copiaGuionNumero[i]);
+      break
+    }else if(antesGuion >= antes && antesGuion < antesSiguiente){
+      arrayFinal.splice(j+1,0, copiaGuionNumero[i]);
+      break
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1, 0, copiaGuionNumero[i]);
+      break
+    }
+
+  }
+}
+
+if(arrayFinal.length ==0){
+  arrayFinal.push(copiaGuionNumero);
+}
+
+//punto cero
+
+for(let i=0; i<copiaPuntoCero.length;i++){
+  for(let j=0; j<arrayFinal.length;j++){
+    
+    let stringPuntoCero = copiaPuntoCero[i];
+    let indicePuntoCero = stringPuntoCero.indexOf('.0');
+    let antesPuntoCero = stringPuntoCero.slice(0, indicePuntoCero);
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let indiceIgual = stringComparar.indexOf('=');
+    let indiceParentesis = stringComparar.indexOf('(');
+    let indiceComillas = stringComparar.indexOf('\"');
+    let indiceAsterisco = stringComparar.indexOf('*');
+    let indiceLetras = stringComparar.search(/[A-Za-z]/g);
+    let indiceCeroCero = stringComparar.indexOf('.00');
+    let indiceGuionCero = stringComparar.indexOf('-0');
+    let indiceGuionNumero = stringComparar.search(/(-[1-9])/g);
+    let indiceAntesPuntoCero = stringComparar.indexOf('.0');
+    let antes;
+
+    if(indiceDivision != -1 && indiceComillas != -1){
+      indiceDivision = indiceComillas;
+    }
+    if(indiceIgual != -1 && indiceParentesis != -1){
+      indiceIgual = indiceParentesis;
+    }
+    if(indiceAsterisco != -1 && indiceLetras != -1){
+      indiceLetras  = indiceAsterisco;
+    }
+
+    if(indiceMas != -1){
+      antes = stringComparar.slice (0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice (0, indiceDivision);
+    }else if(indiceColon != -1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else if(indiceIgual != -1){
+      antes = stringComparar.slice(0, indiceIgual);
+    }else if(indiceParentesis != -1){
+      antes = stringComparar.slice(0, indiceParentesis);
+    }else if(indiceComillas != -1){
+      antes = stringComparar.slice(0, indiceComillas);
+    }else if(indiceAsterisco != -1){
+      antes = stringComparar.slice(0, indiceAsterisco);
+    }else if(indiceLetras != -1){
+      antes = stringComparar.slice(0, indiceLetras);
+    }else if(indiceCeroCero != -1){
+      antes = stringComparar.slice(0, indiceCeroCero+1);
+    }else if(indiceGuionCero !=-1){
+      antes=stringComparar.slice(0, indiceGuionCero)
+    }else if(indiceGuionNumero != -1){
+      antes = stringComparar.slice(0, indiceGuionNumero);
+    }else if(indiceAntesPuntoCero != -1){
+      antes = stringComparar.slice(0, indiceAntesPuntoCero+1);
+    }else{
+      antes = stringComparar
+    }
+
+    let stringSiguiente;
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+
+      stringSiguiente = arrayFinal[j+1];
+      let indiceSiguienteMas = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      let indiceSiguienteColon = stringSiguiente.indexOf(':');
+      let indiceSiguienteIgual = stringSiguiente.indexOf('=');
+      let indiceSiguienteParentesis = stringSiguiente.indexOf('(');
+      let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
+      let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Za-z]/g);
+      let indiceSiguienteCeroCero = stringSiguiente.indexOf('.00');
+      let indiceSiguienteGuionCero = stringSiguiente.indexOf('-0');
+      let indiceSiguienteGuionNumero = stringSiguiente.search(/(-[1-9])/g);
+
+
+      if(indiceSiguienteDivision != -1 && indiceSiguienteComillas != -1){
+        indiceSiguienteDivision = indiceSiguienteComillas;
+      }
+      if(indiceSiguienteIgual != -1 && indiceSiguienteParentesis != -1){
+        indiceSiguienteIgual = indiceSiguienteParentesis;
+      }
+      if(indiceSiguienteLetras != -1 && indiceSiguienteAsterisco != -1){
+        indiceSiguienteLetras = indiceSiguienteAsterisco;
+      }
+
+      if(indiceSiguienteMas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+      }else if(indiceSiguienteDivision != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+      }else if(indiceSiguienteColon != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+      }else if(indiceSiguienteIgual != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteIgual);
+      }else if(indiceSiguienteParentesis != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteParentesis);
+      }else if(indiceSiguienteComillas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteComillas);
+      }else if(indiceSiguienteAsterisco != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteAsterisco)
+      }else if(indiceSiguienteLetras != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteLetras);
+      }else if(indiceSiguienteCeroCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteCeroCero+1);
+      }else if(indiceSiguienteGuionCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteGuionCero);
+      }else if(indiceSiguienteGuionNumero != -1){
+        antesSiguiente = stringSiguiente.slice(0,indiceSiguienteGuionNumero);
+      }else{
+        antesSiguiente = stringSiguiente;
+      }
+    }
+
+    if(j==0 && antesPuntoCero< antes ){
+      arrayFinal.splice(j,0, copiaPuntoCero[i]);
+      break
+    }else if(antesPuntoCero >=antes && antesPuntoCero < antesSiguiente){
+      arrayFinal.splice(j+1,0, copiaPuntoCero[i]);
+      break
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1,0, copiaPuntoCero[i]);
+      break
+    }
+
+  }
+}
+
+if(arrayFinal.length == 0){
+  arrayFinal.push(copiaPuntoCero);
+}
+
+//copia Apostrofo
+for(let i=0; i< copiaApostrofo.length; i++){
+  for(let j = 0; j<arrayFinal.length;j++){
+
+    let stringApostrofo = copiaApostrofo[i];
+    let indiceApostrofo = stringApostrofo.indexOf("'");
+    let antesApostrofo = stringApostrofo.slice(0, indiceApostrofo);
+
+    let stringComparar = arrayFinal[j];
+    let indiceMas = stringComparar.indexOf('+');
+    let indiceDivision = stringComparar.indexOf('/');
+    let indiceColon = stringComparar.indexOf(':');
+    let indiceIgual = stringComparar.indexOf('=');
+    let indiceParentesis = stringComparar.indexOf('(');
+    let indiceComillas = stringComparar.indexOf('\"');
+    let indiceAsterisco = stringComparar.indexOf('*');
+    let indiceLetras = stringComparar.search(/[A-Za-z]/g);
+    let indiceCeroCero = stringComparar.indexOf('.00');
+    let indiceGuionCero = stringComparar.indexOf('-0');
+    let indiceGuionNumero = stringComparar.search(/(-[1-9])/g);
+    let indicePuntoCero = stringComparar.indexOf('.0');
+    let indiceAntesApostrofo = stringComparar.indexOf("'");
+    let antes;
+
+    if(indiceDivision != -1 && indiceComillas != -1){
+      indiceDivision = indiceComillas;
+    }
+    if(indiceIgual != -1 && indiceParentesis != -1){
+      indiceIgual = indiceParentesis;
+    }
+    if(indiceAsterisco != -1  && indiceLetras != -1){
+      indiceLetras = indiceAsterisco;
+    }
+
+    if(indiceMas !=-1){
+      antes = stringComparar.slice(0, indiceMas);
+    }else if(indiceDivision != -1){
+      antes = stringComparar.slice(0, indiceDivision);
+    }else if(indiceColon != -1){
+      antes = stringComparar.slice(0, indiceColon);
+    }else if(indiceIgual != -1){
+      antes = stringComparar.slice(0, indiceIgual);
+    }else if(indiceParentesis != -1){
+      antes = stringComparar.slice(0, indiceParentesis);
+    }else if(indiceComillas != -1){
+      antes = stringComparar.slice(0, indiceComillas);
+    }else if(indiceAsterisco != -1){
+      antes = stringComparar.slice(0, indiceAsterisco);
+    }else if(indiceLetras !=-1){
+      antes= stringComparar.slice(0, indiceLetras);
+    }else if(indiceCeroCero != -1){
+      antes = stringComparar.slice(0, indiceCeroCero+1);
+    }else if(indiceGuionCero != -1){
+      antes = stringComparar.slice(0, indiceGuionCero);
+    }else if(indiceGuionNumero != -1){
+      antes =stringComparar.slice(0, indiceGuionNumero);
+    }else if(indicePuntoCero != -1){
+      antes = stringComparar.slice(0, indicePuntoCero+1);
+    }else if(indiceAntesApostrofo !=-1){
+      antes =stringComparar.slice(0, indiceAntesApostrofo);
+    }else{
+      antes = stringComparar
+    }
+
+    let stringSiguiente;
+    let antesSiguiente;
+
+    if(j != arrayFinal.length-1){
+      stringSiguiente = arrayFinal[j+1];
+      let indiceSiguienteMas = stringSiguiente.indexOf('+');
+      let indiceSiguienteDivision = stringSiguiente.indexOf('/');
+      let indiceSiguienteColon = stringSiguiente.indexOf(':');
+      let indiceSiguienteIgual = stringSiguiente.indexOf('=');
+      let indiceSiguienteParentesis = stringSiguiente.indexOf('(');
+      let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
+      let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Za-z]/g);
+      let indiceSiguienteCeroCero = stringSiguiente.indexOf('.00');
+      let indiceSiguienteGuionCero = stringSiguiente.indexOf('-0');
+      let indiceSiguienteGuionNumero = stringSiguiente.search(/(-[1-9])/g);
+      let indiceSiguientePuntoCero = stringSiguiente.indexOf('.0');
+
+      if(indiceSiguienteDivision !=-1 && indiceSiguienteComillas != -1){
+        indiceSiguienteDivision = indiceSiguienteComillas;
+      }
+      if(indiceSiguienteIgual != -1 && indiceSiguienteParentesis !=-1){
+        indiceSiguienteIgual = indiceSiguienteParentesis;
+      }
+      if(indiceSiguienteLetras != -1 && indiceSiguienteAsterisco !=-1){
+        indiceSiguienteLetras = indiceSiguienteAsterisco;
+      }
+
+      if(indiceSiguienteMas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteMas);
+      }else if(indiceSiguienteDivision !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteDivision);
+      }else if(indiceSiguienteColon != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteColon);
+      }else if(indiceSiguienteIgual != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteIgual);
+      }else if(indiceSiguienteParentesis !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteParentesis);
+      }else if(indiceSiguienteComillas != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteComillas);
+      }else if(indiceSiguienteAsterisco != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteAsterisco);
+      }else if(indiceSiguienteLetras != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteLetras);
+      }else if(indiceSiguienteCeroCero !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteCeroCero+1);
+      }else if(indiceSiguienteGuionCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguienteGuionCero);
+      }else if(indiceSiguienteGuionNumero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceGuionNumero);
+      }else if(indiceSiguientePuntoCero != -1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguientePuntoCero+1);
+      }else{
+        antesSiguiente = stringSiguiente;
+      }
+    }
+
+    if(j==0 && antesApostrofo <antes){
+      arrayFinal.splice(j,0, copiaApostrofo[i]);
+      break
+    }else if(antesApostrofo >= antes && antesApostrofo < antesSiguiente){
+      arrayFinal.splice(j+1,0, copiaApostrofo[i]);
+    break;
+    }else if(j== arrayFinal.length-1){
+      arrayFinal.splice(j+1,0, copiaApostrofo[i]);
+      break
+    }
+
+  }
+}
+
+//Hay que añadir los auxiliares independientes metiendolos en el if inicial, ordenandolos y luego aqui al final los empujamos al inicio. Hay que procesar el output para que salga con un punto cada tres numeros
 
 console.log("mas "+ copiaMas);//hecho
 console.log("division "+ copiaDivision);//hecho
@@ -1614,12 +2386,14 @@ console.log("parentesis cero " + copiaParentesisCero);//hecho
 console.log("parentesis numero " + copiaParentesisNumero);//hecho
 console.log("parentesis igual " + copiaParentesisIgual);//hecho
 console.log("comillas " + copiaComillas);//hecho
-console.log("asterisco" + copiaAsterisco);//hecho
-console.log("Letras" + copiaLetras);
-console.log("cero cero" + copiaCeroCero);
-console.log("guion cero" + copiaGuionCero);
-console.log("guion numero " + copiaGuionNumero);
-console.log("punto cero " + copiaPuntoCero);
-console.log("apostrofo " + copiaApostrofo);
+console.log("asterisco " + copiaAsterisco);//hecho
+console.log("Letras " + copiaLetras);//hecho
+console.log("cero cero" + copiaCeroCero);//hecho
+console.log("guion cero" + copiaGuionCero);//hecho
+console.log("guion numero " + copiaGuionNumero);//hecho
+console.log("punto cero " + copiaPuntoCero);//hecho
+console.log("apostrofo " + copiaApostrofo);//hecho
 console.log("array final = "+arrayFinal)
 }//FIN DE LA FUNCION
+
+//usando esto de entrada de prueba 1, 1/45, 1+34, 1:23, 1=111, 1(034),1(345), 1::24, 1(=490),1"2005", 2, 2/65, 2"1900/2000",2"2005", 2"1990/2000", 3, 3(490), 1*asd, 2*asd, 3*asd, 1ARTUREZ, 2MARTINEZ, 2ATAULFO, 1.0023, 11.0023, 2.0034, 2.0021, 4.0056, 1-023, 1-024, 2-045, 3-065, 1-24, 2-34, 3-43, 3-21, 2.02, 2.045, 3.02, 2'12, 2'09, 1'1223
