@@ -1,11 +1,151 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Domine&family=Slabo+27px&display=swap');
 body{
-  background-color: rgb(123, 168, 143);
+  background-color: #004643;
   text-align: center;
+
+}
+h1, h4{
+  color:#fffffe ;
+  font-family: 'Domine', serif;
 }
 textarea{
+  color:#001e1d;
   resize: vertical;
   overflow: scroll;
-  min-width: 200px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 5px;
+  width: 50%;
+  max-width: 500px;
+  height: 100px;
+  transition: height .5s;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-align: left;
+  padding: 10px
+}
+#boton{
+  background-color:#f9bc60 ;
+  color: #001e1d;
+  border: 1px solid #ba851c;
+  border-radius: 3px;
+  width: 25%;
+  max-width: 200px;
+  font-size: 1.1rem;
+  height: 50px;
+  margin: 15px auto;
+}
 
+#boton:hover{
+  cursor: pointer;
+  color: #035f5c;
+}
+#boton:active{
+  margin-top: 17px;
   
+}
+
+.wrapper{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+#lista{
+   display: inline-flex;
+    /* width: 75%; */
+
+   margin-left: auto;
+   text-align: left;
+  align-items: center;  
+   flex-wrap: wrap; 
+  color: #fffffe;
+ 
+}
+
+.li{
+  color: #fffffe;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  padding-right: 10px;
+  overflow-wrap: break-word;
+  
+  min-width: 28%;
+
+
+
+  animation:  entrar 0.5s;
+}
+@keyframes entrar {
+  0% {
+
+            transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    
+            transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@media (min-width: 700px){
+  #lista{
+    width: 75%;
+  }
+}
+
+@media (max-width: 450px){
+  .li {
+    width: 43%;
+    font-size: 0.9rem;
+  }
+  #lista{
+    width: 50%;
+    margin: auto;
+  }
+  #boton{
+    font-size: 0.8rem;
+  }
+}
+@media (max-width: 290px){
+  .li {
+    width: 60%;
+    font-size: 0.8rem;
+  }
+  #lista{
+    width: 50%;
+    margin: auto;
+  }
+  #boton{
+    font-size: 0.7rem;
+  }
+}
+
+@media (min-width:600px){
+  .li{
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1000px){
+  .li{
+    width: 25%;
+    font-size: 1.1rem;
+  
+  }
+  #lista{
+     /* margin: 0 auto; */
+    width: 80%; 
+    
+  }
+}
+@media (min-width: 1600px){
+  #lista{
+    margin-left: 400px;
+    width: 50%;
+  }
 }

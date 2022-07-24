@@ -24,23 +24,21 @@
 </h1>
 
 <h4>Introduce los numeros a ordenar separados por comas</h4>
-<textarea  id="input" placeholder="numeros CDU" onChange="ajustaAltura()"></textarea>
-<button type="submit" onclick="ordenaCDU()">Ordename ésta</button>
+<textarea  id="input" placeholder="Numeros CDU" onChange="ajustaAltura()"></textarea>
+<button type="submit" onclick="ordenaCDU()" id="boton">Ordename ésta</button>
 <script>
   //no me puedo creer que tenga que coger un script para ajustar la altura anyway la altura de todo el texto es scrollheight, lo que mide la scrollbar, cuando cambia lo ponemos como esa altura
   function ajustaAltura(){
     let altura =document.getElementById("input");
-    altura.style.height = `${altura.scrollHeight+15}px`;
+    
+    altura.style.height = `${altura.scrollHeight+10}px`;
 
   }
 </script>
-<div>
-  Aquí irán los resultados estará vacío y los insertamos con innerhtml
-  <ol>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
+<div class="wrapper">
+
+  <ol id="lista">
+   
   </ol>
 </div>
 </body>

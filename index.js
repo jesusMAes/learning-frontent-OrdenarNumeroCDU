@@ -20,12 +20,13 @@ function ordenaCDU(){
   
   for (let i= 0; i< arrayEntrada.length; i++){
     let splitTemporal = arrayEntrada[i];
+    let indiceCero = splitTemporal.indexOf('0');
     let splitSegundo = splitTemporal.split('');
     for(let j=0; j<splitSegundo.length; j++){
       let regexcerocero = /(\.00)/g;
       let regexPuntoCero = /(\.0)/g;
-      
-      if(regexcerocero.test(splitTemporal)==false &&  regexPuntoCero.test(splitTemporal)==false){
+     
+      if(regexcerocero.test(splitTemporal)==false && regexPuntoCero.test(splitTemporal)==false &&   splitTemporal[0] != 0){
        
       if (splitSegundo[j] == ' ' || splitSegundo[j]=='.'){
         splitSegundo.splice(j, 1);
@@ -37,7 +38,8 @@ function ordenaCDU(){
       }
     }
   }
-  if(splitSegundo[1] != '.'){
+
+  if(splitSegundo[1] != '.' && splitSegundo[0] != '(' && splitSegundo[0] != '"'&& splitSegundo[0] != 0 ){
     splitSegundo.splice(1, 0, '.');
   }
     let entexto = splitSegundo.join("");
@@ -49,6 +51,15 @@ function ordenaCDU(){
   console.log("array sin puntos: "+arraysinpuntos)
 
   //fin del for para los puntos, ahora vamos a recorrer el array pasando cada elemento a su operador, voy a hacer un array para cada simbolo. fuerza bruta joer.
+
+  //auxiliares
+  let auxiliarIgual = []; // =numero
+  let auxiliarCero = []; // (0234)
+  let auxiliarNumero = []; //(430);
+  let auxiliarParentesisIgual =[];// (=112)
+  let auxiliarTiempo = [];// ""
+
+
   let igualArray=[]; // = lengua
   let parentesisCeroArray =[] // (0...) forma
   let parentesisNumeroArray= []; // (123) lugar
@@ -86,15 +97,28 @@ for(let i=0; i< arraysinpuntos.length; i++){
   let regexABC = /[a-z A-Z]/g;
   let regexApostrofo = /\'/g;
   let regexcerocero = /(\.00)/g;
-  let regexPuntoCero = /(\.0)/g
+  let regexPuntoCero = /(\.0)/g;
+  let regexnumero= /[1-9]/;
   let testRegexCeroCero= regexcerocero.test(stringOperar);
   let testRexepuntocero = regexPuntoCero.test(stringOperar);
+  let testRegexNumero = regexnumero.test(stringOperar.charAt(1));;
+  
 
   let testRegexOperadores = regexOperadores.test(stringOperar);
    // console.log(regexOperadores.test(stringOperar));
   if(testRegexOperadores == false && testRegexCeroCero==false && testRexepuntocero==false){
     numeroSimpleArray.push(arraysinpuntos[i]);
-  } else if(stringOperar.indexOf('(=') !=-1){
+  } else if(stringOperar.charAt(0)== '='){
+   auxiliarIgual.push(arraysinpuntos[i]);
+  }else if(stringOperar.charAt(0)== '('&& stringOperar.charAt(1)=='0'){
+    auxiliarCero.push(arraysinpuntos[i]);
+  }else if(stringOperar.charAt(0)== '(' && testRegexNumero ==true){
+    auxiliarNumero.push(arraysinpuntos[i]);
+  }else if(stringOperar.charAt(0)== '(' && stringOperar.charAt(1)== '='){
+    auxiliarParentesisIgual.push(arraysinpuntos[i]);
+  }else if(stringOperar.charAt(0)== '\"'){
+    auxiliarTiempo.push(arraysinpuntos[i]);
+  }else if(stringOperar.indexOf('(=') !=-1){
     parentesisIgualArray.push(arraysinpuntos[i])
   } else if(stringOperar.indexOf('=')!= -1){
     //ya hemos separado los numeros básicos, para no perdernos seguimos el orden de preferencia
@@ -132,6 +156,18 @@ for(let i=0; i< arraysinpuntos.length; i++){
 
 }//FIN DEL FOR
 
+//quitarle el punto a los auxiliares
+
+for(let i=0; i< auxiliarIgual.length; i++){
+  let string = auxiliarIgual[i];
+  let arrayTemporal = string.split('');
+  for(let j=0; j< arrayTemporal.length;j++){
+    if(arrayTemporal[j]== '.'){
+      arrayTemporal.splice(j,1);
+    }
+  }
+  auxiliarIgual[i] = arrayTemporal.join('');
+}
 
 
 //ya están separados en su correspondiente array ahora toca ordenarlos
@@ -144,6 +180,163 @@ numeroSimpleArray.sort();
 let arrayFinal = numeroSimpleArray;
 
 console.log("primer numero simple "+numeroSimpleArray)
+
+//Ordenar auxiliares------------------------------------------
+
+for(let i= 0; i<auxiliarIgual.length;i++){
+  for(let j=0; j< auxiliarIgual.length-1;j++){
+
+    let stringTemporal = auxiliarIgual[j];
+    let indiceIgual = stringTemporal.indexOf('=');
+    let despues = stringTemporal.slice(indiceIgual+1);
+
+    let stringSiguiente = auxiliarIgual[j+1];
+    let indiceIgualSiguiente = stringSiguiente.indexOf('=');
+    let despuesSiguiente = stringSiguiente.slice(indiceIgualSiguiente+1);
+
+
+    let almacenTemporal;
+    if(despues > despuesSiguiente){
+      almacenTemporal = auxiliarIgual[j];
+      auxiliarIgual[j] = auxiliarIgual[j+1];
+      auxiliarIgual[j+1]= almacenTemporal
+    }
+  }
+}
+
+for(let i=0; i<auxiliarCero.length;i++){
+  for(let j=0; j<auxiliarCero.length-1;j++){
+    let stringTemporal = auxiliarCero[j];
+    let stringSiguiente = auxiliarCero[j+1];
+    let almacenTemporal;
+    if(stringTemporal > stringSiguiente){
+      almacenTemporal = auxiliarCero[j];
+      auxiliarCero[j] = auxiliarCero[j+1];
+      auxiliarCero[j+1] = almacenTemporal;
+    }
+  }
+}
+for(let i=0; i<auxiliarNumero.length;i++){
+  for(let j=0; j<auxiliarNumero.length-1;j++){
+    let stringTemporal = auxiliarNumero[j];
+    let stringSiguiente = auxiliarNumero[j+1];
+    let almacenTemporal;
+    if(stringTemporal > stringSiguiente){
+      almacenTemporal = auxiliarNumero[j];
+      auxiliarNumero[j] = auxiliarNumero[j+1];
+      auxiliarNumero[j+1] = almacenTemporal;
+    }
+  }
+}
+
+for(let i= 0; i<auxiliarParentesisIgual.length;i++){
+  for(let j=0; j< auxiliarParentesisIgual.length-1;j++){
+
+    let stringTemporal = auxiliarParentesisIgual[j];
+    let indiceIgual = stringTemporal.indexOf('=');
+    let despues = stringTemporal.slice(indiceIgual+1);
+
+    let stringSiguiente = auxiliarParentesisIgual[j+1];
+    let indiceIgualSiguiente = stringSiguiente.indexOf('=');
+    let despuesSiguiente = stringSiguiente.slice(indiceIgualSiguiente+1);
+
+
+    let almacenTemporal;
+    if(despues > despuesSiguiente){
+      almacenTemporal = auxiliarParentesisIgual[j];
+      auxiliarParentesisIgual[j] = auxiliarParentesisIgual[j+1];
+      auxiliarParentesisIgual[j+1]= almacenTemporal
+    }
+  }
+}
+
+//auxiliar Tiempo
+for(let i = 0; i<auxiliarTiempo.length;i++){
+  for(let j= 0; j <auxiliarTiempo.length-1;j++){
+
+    let stringFecha = auxiliarTiempo[j];
+    let indiceComillas = stringFecha.indexOf('"');
+    let indiceDivision = stringFecha.indexOf('/');
+
+    let fechaAntes;
+    let fechaDespues;
+
+    if(indiceDivision != -1){
+      fechaAntes = stringFecha.slice(indiceComillas+1, indiceDivision-1);
+      fechaDespues = stringFecha.slice(indiceDivision+1, -1);
+    }else{
+      fechaAntes = stringFecha.slice(1,-1);
+    }
+      //añadir ceros para que se compare bien
+      if(fechaAntes.length==1){
+        fechaAntes +=000;
+      }else if(fechaAntes.length==2){
+        fechaAntes +=00;
+      }else if(fechaAntes.length==3){
+        fechaAntes +=0;
+      }
+      if(indiceDivision !=-1){
+      if(fechaDespues.length ==1){
+        fechaDespues +=000;
+      }else if(fechaDespues.length==2){
+        fechaDespues +=00;
+      }else if(fechaDespues.length ==3){
+        fechaDespues +=0;
+      }
+      }
+
+    let stringFechaSiguiente = auxiliarTiempo[j+1];
+    let indiceComillasSiguiente = stringFechaSiguiente.indexOf('"');
+    let indiceDivisionSiguiente = stringFechaSiguiente.indexOf('/');
+  
+    
+
+    let fechaSiguiente;
+    let fechaSiguienteDespues;
+
+    if(indiceDivisionSiguiente !=-1){
+      fechaSiguiente = stringFechaSiguiente.slice(indiceComillasSiguiente+1, indiceDivisionSiguiente-1);
+      fechaSiguienteDespues = stringFechaSiguiente.slice(indiceDivisionSiguiente+1,-1);
+    }else{
+      fechaSiguiente =stringFechaSiguiente.slice(1,-1);
+    }
+
+    if(fechaSiguiente.length == 1){
+      fechaSiguiente += 000; 
+    }else if(fechaSiguiente.length==2){
+      fechaSiguiente +=00;
+    }else if(fechaSiguiente.length == 3){
+      fechaSiguiente += 0;
+    }
+    if(indiceDivisionSiguiente !=-1){
+    if(fechaSiguienteDespues.length == 1){
+      fechaSiguienteDespues += 000;
+    }else if(fechaSiguienteDespues.length ==2){
+      fechaSiguienteDespues += 00;
+    }else if(fechaSiguienteDespues.length == 3){
+      fechaSiguienteDespues += 0 ;
+    }
+  }
+
+    let almacenTemporal;
+    if( fechaAntes > fechaSiguiente){
+      almacenTemporal = auxiliarTiempo[j];
+      auxiliarTiempo[j] = auxiliarTiempo[j+1];
+      auxiliarTiempo[j+1]= almacenTemporal;
+    }else if(fechaAntes == fechaSiguiente){
+      if(fechaDespues < fechaSiguienteDespues){
+        almacenTemporal = auxiliarTiempo[j];
+        auxiliarTiempo[j] = auxiliarTiempo[j+1];
+        auxiliarTiempo[j+1] = almacenTemporal;
+      }
+    }
+
+
+  }
+}
+
+
+//fin ordenar auxiliares--------------------------------------
 
 //ORDENAR IGUALARRAY........................
 
@@ -2110,7 +2303,7 @@ for(let i=0; i<copiaPuntoCero.length;i++){
     
     let stringPuntoCero = copiaPuntoCero[i];
     let indicePuntoCero = stringPuntoCero.indexOf('.0');
-    let antesPuntoCero = stringPuntoCero.slice(0, indicePuntoCero);
+    let antesPuntoCero = stringPuntoCero.slice(0, indicePuntoCero+1);
 
     let stringComparar = arrayFinal[j];
     let indiceMas = stringComparar.indexOf('+');
@@ -2182,6 +2375,7 @@ for(let i=0; i<copiaPuntoCero.length;i++){
       let indiceSiguienteCeroCero = stringSiguiente.indexOf('.00');
       let indiceSiguienteGuionCero = stringSiguiente.indexOf('-0');
       let indiceSiguienteGuionNumero = stringSiguiente.search(/(-[1-9])/g);
+      let indiceSiguientePuntoCero = stringSiguiente.indexOf('.0');
 
 
       if(indiceSiguienteDivision != -1 && indiceSiguienteComillas != -1){
@@ -2216,16 +2410,23 @@ for(let i=0; i<copiaPuntoCero.length;i++){
         antesSiguiente = stringSiguiente.slice(0, indiceSiguienteGuionCero);
       }else if(indiceSiguienteGuionNumero != -1){
         antesSiguiente = stringSiguiente.slice(0,indiceSiguienteGuionNumero);
-      }else{
+      }else if(indiceSiguientePuntoCero !=-1){
+        antesSiguiente = stringSiguiente.slice(0, indiceSiguientePuntoCero+1)
+      }
+      else{
         antesSiguiente = stringSiguiente;
       }
     }
 
+    console.log("antes "+antes);
+    console.log("comparando " +antesPuntoCero);
+    console.log("siguiente: "+antesSiguiente);
     if(j==0 && antesPuntoCero< antes ){
       arrayFinal.splice(j,0, copiaPuntoCero[i]);
       break
     }else if(antesPuntoCero >=antes && antesPuntoCero < antesSiguiente){
       arrayFinal.splice(j+1,0, copiaPuntoCero[i]);
+      console.log("insertado")
       break
     }else if(j== arrayFinal.length-1){
       arrayFinal.splice(j+1,0, copiaPuntoCero[i]);
@@ -2374,7 +2575,23 @@ for(let i=0; i< copiaApostrofo.length; i++){
   }
 }
 
-//Hay que añadir los auxiliares independientes metiendolos en el if inicial, ordenandolos y luego aqui al final los empujamos al inicio. Hay que procesar el output para que salga con un punto cada tres numeros
+//Hay que añadir los auxiliares independientes metiendolos en el if inicial, ordenandolos y luego aqui al final los empujamos al inicio.
+
+
+arrayFinal = auxiliarTiempo.concat(arrayFinal);
+arrayFinal = auxiliarParentesisIgual.concat(arrayFinal);
+arrayFinal = auxiliarNumero.concat(arrayFinal);
+arrayFinal = auxiliarCero.concat(arrayFinal);
+arrayFinal = auxiliarIgual.concat(arrayFinal);
+
+//Hay que procesar el output para que salga con un punto cada tres numeros
+
+
+console.log("auxiliar igual: "+ auxiliarIgual);
+console.log("auxiliarCero: "+auxiliarCero);
+console.log("auxiliar numero: "+auxiliarNumero);
+console.log("Auxiliar parentesis Igual: "+auxiliarParentesisIgual);
+console.log("auxiliar tiempo: "+auxiliarTiempo);
 
 console.log("mas "+ copiaMas);//hecho
 console.log("division "+ copiaDivision);//hecho
@@ -2394,6 +2611,76 @@ console.log("guion numero " + copiaGuionNumero);//hecho
 console.log("punto cero " + copiaPuntoCero);//hecho
 console.log("apostrofo " + copiaApostrofo);//hecho
 console.log("array final = "+arrayFinal)
+
+//quitar puntos iniciales convertimos cada posicion del array en un array y le quitamos el punto del inicio en caso de que no sea un .00, .0 
+
+for(let i=0; i<arrayFinal.length;i++){
+  let string = arrayFinal[i];
+  let arrayPosicion = string.split('');
+  let indicePuntoCero = string.indexOf('.0');
+  if(indicePuntoCero != 1 && arrayPosicion[1]=='.' ){
+    
+    arrayPosicion.splice(1, 1);
+  }
+  string = arrayPosicion.join('');
+  arrayFinal[i] = string;
+}
+
+//añadir puntos cada tres numeros, usamos un regex para ver el numero /[0-9]/y añadimos siempre que el string no sea un punto cero cero que entonces empezamos a añadir tras el y cuando llegamos a un operador reiniciamos la cuenta
+
+for(let i=0; i<arrayFinal.length;i++){
+
+  let string = arrayFinal[i];
+  let indiceCero = string.indexOf('.0');
+  let regexnumero= /[0-9]/;
+  let indiceComillas = string.indexOf('"');
+  
+  let versionArray = string.split('');
+  let contador=0;
+  for(let j=0; j<versionArray.length;j++){
+    
+
+    let numero = regexnumero.test(versionArray[j]);
+    let numeroSiguiente = regexnumero.test(versionArray[j+1]);
+
+
+    if(numero ==true ){
+
+      contador++;
+
+      if(contador == 3 && numeroSiguiente == true && indiceComillas ==-1){
+        if(versionArray[j]==0){
+          versionArray.slice(j,0,'.')
+          contador = 0;
+        }else{
+    
+        versionArray.splice(j+1,0,'.');
+        contador=0;
+        }
+      }
+    }else if(numero == false){
+      contador =0;
+    }
+
+  }
+  string = versionArray.join('');
+  arrayFinal[i] = string;
+}
+
+
+
+
+
+//sacar array como listado
+let lista = document.getElementById("lista");
+lista.innerHTML= ''
+arrayFinal.forEach(Element => {
+ let li = document.createElement('li');
+ li.className = "li"
+ lista.appendChild(li);
+ li.innerHTML = Element;
+});
+
 }//FIN DE LA FUNCION
 
-//usando esto de entrada de prueba 1, 1/45, 1+34, 1:23, 1=111, 1(034),1(345), 1::24, 1(=490),1"2005", 2, 2/65, 2"1900/2000",2"2005", 2"1990/2000", 3, 3(490), 1*asd, 2*asd, 3*asd, 1ARTUREZ, 2MARTINEZ, 2ATAULFO, 1.0023, 11.0023, 2.0034, 2.0021, 4.0056, 1-023, 1-024, 2-045, 3-065, 1-24, 2-34, 3-43, 3-21, 2.02, 2.045, 3.02, 2'12, 2'09, 1'1223
+//usando esto de entrada de prueba "19/20", "19/21", "2005", "2000/2003", (=112), (=460), (=321), (12), (321),(0213), (012), =12, =345, 1, 1/45, 1+34, 1:23, 1=111, 1(034),1(345), 1::24, 1(=490),1"2005", 2, 2/65, 2"1900/2000",2"2005", 2"1990/2000", 3, 3(490), 1*asd, 2*asd, 3*asd, 1ARTUREZ, 2MARTINEZ, 2ATAULFO, 1.0023, 11.0023, 2.0034, 2.0021, 4.0056, 1-023, 1-024, 2-045, 3-065, 1-24, 2-34, 3-43, 3-21, 2.02, 2.045, 3.02, 2'12, 2'09, 1'1223
