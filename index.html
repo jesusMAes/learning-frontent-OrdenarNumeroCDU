@@ -2,7 +2,16 @@
 
 <html lang="es">
 <head>
-<!--voy a meter todos los meta para mantener la costumbre aunque no hagan falta-->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0DNPGMVHPM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0DNPGMVHPM');
+</script>
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +19,8 @@
 <meta name="keywords" content="Ordenar CDU, numeros CDU">
 <meta name="author" content="jesusMAes">
 <link rel="icon" type="image/x-icon" href="./dragon-logo.png">
-
+<!--fontawesome-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="styles.css">
 
 <title>Ordéname ésta</title>
@@ -41,6 +51,28 @@
    
   </ol>
 </div>
+<button class="desplegable">Aviso</button>
+  <div class="panel">
+  
+    <p> Esta es una web para corregir ejercicios de CDU, en ningún caso está hecha con animo de ser una herramienta de trabajo. Pueden aparecer bugs. </p>
+  </div>
+<script>
+  let desplegable = document.getElementsByClassName("desplegable");
+
+  desplegable[0].addEventListener("click", function (){
+    this.classList.toggle("active");
+
+    let panel = this.nextElementSibling;
+    if(panel.style.maxHeight){
+      panel.style.maxHeight = null;
+    }else{
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
+</script>
+<footer>
+  Made with  <i class="fa-solid fa-heart"></i>     by <a href="https://github.com/jesusMAes" target="_blank">jesusMAes</a>
+</footer>
 </body>
 <script type="text/javascript" src="index.js"></script>
 </html>
