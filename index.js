@@ -1931,7 +1931,7 @@ for(let i=0; i<copiaCeroCero.length;i++){
     
    
 
-    let stringComparar = arrayFinal[j];
+    let stringComparar = arrayFinal[j].toString();
     let indiceMas = stringComparar.indexOf('+');
     let indiceDivision = stringComparar.indexOf('/');
     let indiceColon = stringComparar.indexOf(':');
@@ -2225,12 +2225,13 @@ for(let i=0; i<copiaGuionNumero.length; i++){
       antes = stringComparar;
     }
 
-    let stringSiguiente;
+    let stringSiguiente= '';
     let antesSiguiente;
 
     if(j != arrayFinal.length-1){
-
-      stringSiguiente = arrayFinal[j+1];
+        
+      stringSiguiente =  arrayFinal[j+1].toString();
+      console.log(stringSiguiente)
       let indiceSiguienteMas = stringSiguiente.indexOf('+');
       let indiceSiguienteDivision = stringSiguiente.indexOf('/');
       let indiceSiguienteColon = stringSiguiente.indexOf(':');
@@ -2238,7 +2239,7 @@ for(let i=0; i<copiaGuionNumero.length; i++){
       let indiceSiguienteParentesis= stringSiguiente.indexOf('(');
       let indiceSiguienteComillas = stringSiguiente.indexOf('\"');
       let indiceSiguienteAsterisco = stringSiguiente.indexOf('*');
-      let indiceSiguienteLetras = stringSiguiente.search(/[A-Za-z]/g);
+      let indiceSiguienteLetras = stringSiguiente.search(/[A-Z a-z]/g);
       let indiceSiguienteCero = stringSiguiente.indexOf('.00');
       let indiceSiguienteGuionCero = stringSiguiente.indexOf('-0');
 
@@ -2363,7 +2364,7 @@ for(let i=0; i<copiaPuntoCero.length;i++){
 
     if(j != arrayFinal.length-1){
 
-      stringSiguiente = arrayFinal[j+1];
+      stringSiguiente = arrayFinal[j+1].toString();
       let indiceSiguienteMas = stringSiguiente.indexOf('+');
       let indiceSiguienteDivision = stringSiguiente.indexOf('/');
       let indiceSiguienteColon = stringSiguiente.indexOf(':');
@@ -2615,7 +2616,7 @@ console.log("array final = "+arrayFinal)
 //quitar puntos iniciales convertimos cada posicion del array en un array y le quitamos el punto del inicio en caso de que no sea un .00, .0 
 
 for(let i=0; i<arrayFinal.length;i++){
-  let string = arrayFinal[i];
+  let string = arrayFinal[i].toString();
   let arrayPosicion = string.split('');
   let indicePuntoCero = string.indexOf('.0');
   if(indicePuntoCero != 1 && arrayPosicion[1]=='.' ){
